@@ -6,7 +6,9 @@
     "dev": "vite dev --port 3000",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "pnpm run build && wrangler deploy"
+    "deploy": "pnpm run build && wrangler deploy",
+    "cf-types": "wrangler types",
+    "db:mig:apply": "wrangler d1 migrations apply MyDB"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.30.1",
