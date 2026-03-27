@@ -5,10 +5,7 @@
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
-    "preview": "vite preview",
-    "deploy": "pnpm run build && wrangler deploy",
-    "cf-types": "wrangler types",
-    "db:mig:apply": "wrangler d1 migrations apply MyDB"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.5.6",
