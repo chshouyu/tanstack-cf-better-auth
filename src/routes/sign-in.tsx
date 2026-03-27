@@ -1,6 +1,8 @@
-import { authClient } from '@/utils/auth-client'
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { SubmitEvent, useState } from 'react'
+
+import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
+
+import { authClient } from '@/utils/auth-client'
 
 export const Route = createFileRoute('/sign-in')({
   component: RouteComponent,
@@ -36,7 +38,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="h-screen flex items-center justify-center px-4">
+    <div className="flex h-screen items-center justify-center px-4">
       <form className="w-full max-w-sm space-y-3" onSubmit={handleSubmit}>
         <h1 className="text-xl font-semibold">Sign In</h1>
 

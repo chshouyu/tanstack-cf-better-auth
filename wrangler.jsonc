@@ -9,7 +9,7 @@
       "binding": "MY_DB",
       "database_name": "MyDB",
       "database_id": "7F550F75-F39A-4C25-A430-3A336DC8E64C",
-      "migrations_dir": "migrations",
-    },
-  ],
+      "migrations_dir": "migrations"
+    }
+  ]
 }
