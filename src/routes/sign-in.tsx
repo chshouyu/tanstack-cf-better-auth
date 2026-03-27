@@ -68,9 +68,12 @@ function RouteComponent() {
 
         {message ? <p className="text-sm">{message}</p> : null}
 
-        <div>
+        <div className="flex justify-between">
           <Link to="/sign-up" className="text-sm text-blue-500">
             Don't have an account? Sign Up
+          </Link>
+          <Link to="/" className="text-sm text-blue-500">
+            Back to Home
           </Link>
         </div>
       </form>
