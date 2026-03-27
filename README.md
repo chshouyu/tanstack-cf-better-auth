@@ -1,6 +1,6 @@
 # tanstack-cf-better-auth
 
-A minimal example of running better-auth with TanStack Start on Cloudflare Workers.
+A minimal example of running better-auth with TanStack Start on Nitro.
 
 This project demonstrates a simple auth flow with:
 
@@ -8,15 +8,16 @@ This project demonstrates a simple auth flow with:
 - Email and password sign in
 - Session handling with better-auth
 - Sign out
-- Cloudflare D1 for persistence
+- SQLite-based persistence through Drizzle and better-sqlite3
 
 ## Stack
 
 - TanStack Start
 - TanStack Router
 - better-auth
-- Cloudflare Workers
-- Cloudflare D1
+- Nitro
+- Drizzle ORM
+- better-sqlite3
 - React 19
 - Tailwind CSS 4
 
@@ -29,13 +30,15 @@ src/
 		sign-in.tsx            # Sign-in page
 		sign-up.tsx            # Sign-up page
 		api/auth/$.ts          # better-auth HTTP handler
+	db.ts                    # Drizzle SQLite database instance
+	schema.ts                # Auth-related database schema
 	server/
 		better-auth.server.ts  # better-auth server setup
 	utils/
 		auth-client.ts         # better-auth client setup
 migrations/
-	0001_init.sql            # Initial D1 schema
-wrangler.jsonc             # Cloudflare Workers and D1 config
+	0001_init.sql            # Initial SQLite schema
+.env                       # Local environment variables
 ```
 
 ## Local Development
@@ -46,21 +49,29 @@ wrangler.jsonc             # Cloudflare Workers and D1 config
 pnpm install
 ```
 
-### 2. Configure D1
+### 2. Configure environment variables
 
-Create your own D1 database and update `wrangler.jsonc` with the correct values:
-
-- `database_name`
-- `database_id`
-- `binding` which is `MY_DB` in this project
-
-### 3. Apply migrations
+Create a `.env` file with the following values:
 
 ```bash
-pnpm db:mig:apply
+BETTER_AUTH_URL=http://localhost:3000
+DB_FILE_NAME=local.db
 ```
 
-This applies `migrations/0001_init.sql` to D1 and creates the base tables required by better-auth:
+- `BETTER_AUTH_URL` is used by better-auth.
+- `DB_FILE_NAME` points to the SQLite database file used by Drizzle and better-sqlite3.
+
+### 3. Prepare the database
+
+The initial schema is defined in `migrations/0001_init.sql`.
+
+If you are starting from scratch, create a SQLite database file and apply the schema with a tool such as `sqlite3`:
+
+```bash
+sqlite3 local.db < migrations/0001_init.sql
+```
+
+This creates the base tables required by better-auth:
 
 - `User`
 - `Session`
@@ -77,27 +88,25 @@ The app runs on `http://localhost:3000` by default.
 
 ## How Auth Is Wired
 
-- `src/server/better-auth.server.ts` initializes better-auth and connects it to Cloudflare D1.
+- `src/server/better-auth.server.ts` initializes better-auth and uses the Drizzle adapter.
+- `src/db.ts` creates a Drizzle database instance backed by `better-sqlite3`.
+- `src/schema.ts` defines the Better Auth tables in SQLite.
 - `src/routes/api/auth/$.ts` exposes the better-auth GET and POST handler.
 - `src/utils/auth-client.ts` creates the client-side auth instance.
 - The home page reads the current session with `authClient.useSession()`.
 - The sign-in and sign-up pages use `authClient.signIn.email()` and `authClient.signUp.email()`.
 
-## Build and Deploy
-
-### Build
+## Build
 
 ```bash
 pnpm build
 ```
 
-### Deploy to Cloudflare
+You can also preview the production build locally:
 
 ```bash
-pnpm deploy
+pnpm preview
 ```
-
-The deploy command builds the app first and then publishes it with `wrangler deploy`.
 
 ## Available Scripts
 
@@ -105,15 +114,12 @@ The deploy command builds the app first and then publishes it with `wrangler dep
 pnpm dev
 pnpm build
 pnpm preview
-pnpm deploy
-pnpm cf-types
-pnpm db:mig:apply
 ```
 
 ## Use Cases
 
 This project is a good starting point if you want to:
 
-- Validate a better-auth setup on Cloudflare Workers
+- Validate a better-auth setup on Nitro
 - See how better-auth is mounted inside a TanStack Start app
-- Start from a minimal D1-backed email/password auth example
+- Start from a minimal SQLite-backed email/password auth example
