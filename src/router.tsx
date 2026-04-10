@@ -9,6 +9,12 @@ export function getRouter() {
     scrollRestoration: true,
     defaultPreload: false,
     defaultNotFoundComponent: () => <div>Not Found</div>,
+    defaultErrorComponent: ({ error }) => (
+      <div>
+        <h1>Error</h1>
+        <pre>{String(error)}</pre>
+      </div>
+    ),
   })
 
   return router
