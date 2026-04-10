@@ -8,4 +8,10 @@ export const auth = betterAuth({
   },
   database: env.MY_DB,
   plugins: [tanstackStartCookies()],
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 30, // Cache duration in seconds
+    },
+  },
 })
