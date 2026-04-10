@@ -1,10 +1,27 @@
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+import { createServerFn } from '@tanstack/react-start'
+import { getRequestHeaders } from '@tanstack/react-start/server'
+
+import { auth } from '@/server/better-auth.server'
 
 import appCss from '../styles.css?url'
 
+export const getSessionFn = createServerFn({ method: 'GET' }).handler(async () => {
+  const headers = getRequestHeaders()
+
+  const session = await auth.api.getSession({ headers })
+
+  return session
+})
+
 export const Route = createRootRoute({
+  beforeLoad: async () => {
+    const session = await getSessionFn()
+
+    return { session }
+  },
   head: () => ({
     meta: [
       {
