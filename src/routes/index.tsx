@@ -18,6 +18,11 @@ function App() {
       <h1 className="text-3xl font-bold">
         {name ? `Welcome back, ${name}!` : 'Welcome to the app!'}
       </h1>
+      <div>
+        <Link to="/" className="text-blue-500">
+          Go to home
+        </Link>
+      </div>
       {!isPending ? (
         name ? (
           <div>
