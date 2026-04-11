@@ -9,14 +9,17 @@ const logMiddleware = createMiddleware().server(async ({ next, request }) => {
     const clonedResponse = response.clone() // body 只能读一次，clone 后再读日志
     try {
       const data = await clonedResponse.json()
-      console.log('📤 ServerFn Response Data:', {
+      console.log('📤 ServerFn JSON Data:', {
         url: request.url,
         status: response.status,
         data,
-        dataSize: JSON.stringify(data).length,
       })
     } catch {
-      console.log('📤 Response is not JSON or too large')
+      console.log('📤 ServerFn TEXT Data', {
+        url: request.url,
+        status: response.status,
+        text: await clonedResponse.text(),
+      })
     }
   }
 
