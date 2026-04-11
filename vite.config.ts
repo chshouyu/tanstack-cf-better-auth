@@ -16,9 +16,6 @@ const config = defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
-  build: {
-    sourcemap: true,
-  },
 })
 
 export default config
