@@ -9,7 +9,7 @@ export const Route = createFileRoute('/')({ component: App })
 function App() {
   const router = useRouter()
 
-  const { session } = Route.useRouteContext()
+  const { session, sessionDebug, sessionContent } = Route.useRouteContext()
 
   const name = session?.user?.name
 
@@ -23,6 +23,14 @@ function App() {
           Go to home
         </Link>
       </div>
+      <pre>
+        <code>{JSON.stringify(session, null, 2)}</code>
+      </pre>
+      <pre>
+        <code>{JSON.stringify(sessionDebug, null, 2)}</code>
+      </pre>
+      <div>typeof session: {typeof session}</div>
+      <div>{sessionContent}</div>
       {name ? (
         <div>
           <button

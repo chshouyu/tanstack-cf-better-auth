@@ -8,6 +8,20 @@ import { auth } from '@/server/better-auth.server'
 
 import appCss from '../styles.css?url'
 
+function toDebugErrorPayload(error: unknown) {
+  if (error instanceof Error) {
+    return {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    }
+  }
+
+  return {
+    message: String(error),
+  }
+}
+
 export const getSessionFn = createServerFn({ method: 'GET' }).handler(async () => {
   const headers = getRequestHeaders()
 
@@ -18,9 +32,31 @@ export const getSessionFn = createServerFn({ method: 'GET' }).handler(async () =
 
 export const Route = createRootRoute({
   beforeLoad: async () => {
-    const session = await getSessionFn()
+    try {
+      const session = await getSessionFn()
 
-    return { session }
+      return {
+        session,
+        sessionDebug: {
+          ok: true,
+          fetchedAt: new Date().toISOString(),
+          hasSession: Boolean(session),
+        },
+        sessionContent: session ? session.toString() : null,
+      }
+    } catch (error) {
+      // Keep the app usable when session bootstrap fails.
+      console.error('Failed to load session in root beforeLoad:', error)
+      return {
+        session: null,
+        sessionDebug: {
+          ok: false,
+          fetchedAt: new Date().toISOString(),
+          error: toDebugErrorPayload(error),
+        },
+        sessionContent: null,
+      }
+    }
   },
   head: () => ({
     meta: [
