@@ -14,7 +14,7 @@ function App() {
   const name = session?.user?.name
 
   return (
-    <main className="flex h-screen flex-col items-center justify-center space-y-3">
+    <main className="flex min-h-dvh flex-col items-center justify-center space-y-3">
       <h1 className="text-3xl font-bold">
         {name ? `Welcome back, ${name}!` : 'Welcome to the app!'}
       </h1>
