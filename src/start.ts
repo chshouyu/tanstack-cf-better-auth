@@ -3,7 +3,8 @@ import { createMiddleware, createStart } from '@tanstack/react-start'
 const logMiddleware = createMiddleware().server(async ({ next, request }) => {
   const result = await next()
   const response = result.response
-  const contentType = response.headers.get('content-type') || ''
+  const headers = response.headers
+  const contentType = headers.get('content-type') || ''
 
   if (response.ok && contentType.includes('application/json')) {
     const clonedResponse = response.clone() // body 只能读一次，clone 后再读日志
@@ -12,12 +13,14 @@ const logMiddleware = createMiddleware().server(async ({ next, request }) => {
       console.log('📤 ServerFn JSON Data:', {
         url: request.url,
         status: response.status,
+        headers: Object.fromEntries(headers.entries()),
         data,
       })
     } catch {
       console.log('📤 ServerFn TEXT Data', {
         url: request.url,
         status: response.status,
+        headers: Object.fromEntries(headers.entries()),
         text: await clonedResponse.text(),
       })
     }
