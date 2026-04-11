@@ -8,7 +8,7 @@
     {
       "binding": "MY_DB",
       "database_name": "MyDB",
-      "database_id": "7F550F75-F39A-4C25-A430-3A336DC8E64C",
+      "database_id": "16bd7d44-bd20-4ed1-95bd-5a7554e1129e",
       "migrations_dir": "migrations"
     }
   ]
