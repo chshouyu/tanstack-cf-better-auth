@@ -7,12 +7,13 @@ const logMiddleware = createMiddleware().server(async ({ next, request }) => {
   const contentType = headers.get('content-type') || ''
 
   if (response.ok && contentType.includes('application/json')) {
-    const clonedResponse = response.clone() // body 只能读一次，clone 后再读日志
+    const textResponse = response.clone()
+    const jsonResponse = response.clone()
     const headersObject = Object.fromEntries(headers.entries())
-    const textData = await clonedResponse.text()
+    const textData = await textResponse.text()
 
     try {
-      const data = await clonedResponse.json()
+      const data = await jsonResponse.json()
       console.log('📤 ServerFn JSON Data:', {
         url: request.url,
         status: response.status,
@@ -20,11 +21,12 @@ const logMiddleware = createMiddleware().server(async ({ next, request }) => {
         data,
         text: textData,
       })
-    } catch {
+    } catch (error) {
       console.log('📤 ServerFn TEXT Data', {
         url: request.url,
         status: response.status,
         headers: headersObject,
+        error,
         text: textData,
       })
     }
