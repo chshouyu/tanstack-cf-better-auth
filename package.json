@@ -18,7 +18,7 @@
     "@tanstack/react-router-devtools": "latest",
     "@tanstack/react-router-ssr-query": "latest",
     "@tanstack/react-start": "latest",
-    "@tanstack/router-plugin": "^1.167.17",
+    "@tanstack/router-plugin": "^1.167.18",
     "better-auth": "^1.6.2",
     "lucide-react": "^1.8.0",
     "react": "^19.2.5",
