@@ -2,7 +2,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { createServerFn } from '@tanstack/react-start'
-import { getRequestHeaders } from '@tanstack/react-start/server'
+import { getRequestHeaders, setResponseHeaders } from '@tanstack/react-start/server'
 
 import { auth } from '@/server/better-auth.server'
 
@@ -25,7 +25,14 @@ function toDebugErrorPayload(error: unknown) {
 export const getSessionFn = createServerFn({ method: 'GET' }).handler(async () => {
   const headers = getRequestHeaders()
 
-  const session = await auth.api.getSession({ headers })
+  const result = await auth.api.getSession({
+    headers,
+    returnHeaders: true,
+  })
+
+  const session = result.response
+
+  setResponseHeaders(result.headers)
 
   return session
 })
